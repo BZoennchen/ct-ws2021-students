@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; text-align: center; font-family: sans-serif; }
+        canvas { border: 1px solid #ccc; position: relative; }
+        a, a:visited { color: #09f }
+    </style>
+    <meta charset="UTF-8">
+    <title>Drawing</title>
+</head>
+<body>
+    <h1>Drawing Rectangles</h1>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const w = 800;
+        const h = 400;
+        const points = [];
+        const size = 10;
+
+        let updated = false;
+        
+        function setup() {
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            canvas.width = w;
+            canvas.height = h;
+        }
+                
+        /**
+         * This function draws all rectangles to the canvas.
+         * First everything that was drawn is cleared and then 
+         * every rect is drawn at a point of points.
+         */
+        function draw() {
+            if(updated) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'red';
+                ctx.fillStyle = 'gray';
+                for (let i = 0; i < points.length; i++) {
+                    ctx.rect(points[i][0]-size/2, points[i][1]-size/2, size, size);
+                }    
+                
+                ctx.fill();
+                ctx.stroke();
+                updated = false;
+            }
+        }
+
+        /** 
+         * This function is called whenever you click at the canvas.
+         * mouseEvent contains information about the click you did.
+         */
+        canvas.onmousedown = function (mouseEvent) {
+            points.push([
+                mouseEvent.layerX,
+                mouseEvent.layerY
+            ]);
+            updated = true;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            draw();
+        }
+
+        /**
+         * This function is called after all attributes and functions
+         * above are defined. It initializes the canvas (similar to p5js.setup().)
+         */
+        setup();
+
+        /**
+         * We tell the window-object, that the function animate
+         * should be called after some frames.
+         */
+        window.requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
